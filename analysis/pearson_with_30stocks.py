@@ -15,11 +15,12 @@ import itertools
 import numpy as np
 from typing import Dict, Optional, List, Tuple
 
-import tushare as ts
 import pandas as pd
-import scipy.stats as stats
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+# 统一复用 data/get_stock_data.py 的数据获取逻辑
+from data.get_stock_data import get_stock_return_daily
 
 # ==========================================
 # 1. 修复字体问题（兼容Windows/Mac/Linux）
@@ -55,43 +56,6 @@ def setup_matplotlib_font():
 
 # 初始化字体设置
 setup_matplotlib_font()
-
-# ==========================================
-# 2. Tushare Token 设置
-# ==========================================
-MY_TOKEN = 'f13a323a345f13293426902aff556e099701b4e6725fc5e0b06b308b'
-
-def _get_pro(token: Optional[str] = None):
-    """获取 tushare pro 客户端。"""
-    real_token = token or os.getenv("TUSHARE_TOKEN") or MY_TOKEN
-    if not real_token or real_token == '请在这里替换为你的Tushare_Token':
-        raise ValueError("Tushare Token 未设置：请传入 token，或设置环境变量 TUSHARE_TOKEN，或修改 MY_TOKEN")
-
-    ts.set_token(real_token)
-    return ts.pro_api()
-
-def get_stock_return_daily(
-    ts_code: str,
-    start_date: str = "20250101",
-    end_date: str = "20251231",
-    token: Optional[str] = None,
-) -> pd.DataFrame:
-    """获取单只股票在2025年的日收益率数据。"""
-    pro = _get_pro(token)
-
-    df = pro.daily(ts_code=ts_code, start_date=start_date, end_date=end_date)
-    if df is None or df.empty:
-        raise ValueError(f"获取到的数据为空：{ts_code}，请检查代码是否带 .SH/.SZ 等后缀")
-
-    df = df.sort_values(by="trade_date").reset_index(drop=True)
-
-    if "pre_close" not in df.columns or "close" not in df.columns:
-        raise ValueError("daily 接口返回字段缺失：需要 close 和 pre_close")
-
-    df["daily_return"] = df["close"] / df["pre_close"] - 1
-
-    keep_cols = [c for c in ["trade_date", "ts_code", "close", "pre_close", "daily_return"] if c in df.columns]
-    return df.loc[:, keep_cols]
 
 def get_multi_stocks_returns_daily(
     stock_codes: List[str],
