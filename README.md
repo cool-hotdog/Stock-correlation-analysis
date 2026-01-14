@@ -299,4 +299,5 @@ MIT License
 
 ## 👨‍💻 作者
 
-CS61A Project Style - Stock Correlation Analysis v1.0
+PKU经济学院 梁舜哲
+PKU外国语学院 罗苏梦 郑家祺
