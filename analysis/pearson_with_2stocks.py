@@ -10,6 +10,15 @@
 
 from __future__ import annotations
 
+# --- 让脚本可从任意工作目录运行：把项目根目录加入 sys.path ---
+import sys
+from pathlib import Path
+
+_PROJECT_ROOT = Path(__file__).resolve().parents[1]  # .../Stock-correlation-analysis-main
+if str(_PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PROJECT_ROOT))
+# --- end ---
+
 from typing import Dict
 
 import pandas as pd
@@ -127,3 +136,4 @@ if __name__ == "__main__":
 
     except Exception as e:
         print(f"执行失败：{e}")
+
