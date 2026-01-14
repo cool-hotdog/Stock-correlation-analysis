@@ -19,7 +19,7 @@ import pandas as pd
 # 1. 设置 Tushare Token
 # 请务必在这里填入你在 tushare.pro 注册后获取的 Token
 # ==========================================
-MY_TOKEN = 'f13a323a345f13293426902aff556e099701b4e6725fc5e0b06b308b'
+MY_TOKEN = 'your_token'
 
 def _get_pro(token: Optional[str] = None):
     """获取 tushare pro 客户端。
